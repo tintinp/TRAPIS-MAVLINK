@@ -12,7 +12,7 @@ UDP_IP_ADDRESS = "127.0.0.1"
 UDP_PORT_NO = 15000
 
 ''' -------------------------------------------------------------------
-        Set up option parsing to get connection string
+        SET UP OPTION PARSING TO GET CONNECTION STRING
 ---------------------------------------------------------------------'''
 
 parser = argparse.ArgumentParser(description="Commands vehicle using vehicle.simple_goto.")
@@ -24,7 +24,7 @@ connection_string = args.connect
 
 
 ''' -------------------------------------------------------------------
-                        Set up UDP Listener
+                        SET UP UDP LISTENER
 ---------------------------------------------------------------------'''
 
 serverSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -32,7 +32,7 @@ serverSocket.bind((UDP_IP_ADDRESS, UDP_PORT_NO))
 
 
 ''' -------------------------------------------------------------------
-                          Connect
+                        CONNECT TO VEHICLE
 ---------------------------------------------------------------------'''
 
 # Connect to the vehicle
@@ -40,7 +40,7 @@ vehicle = connect(connection_string, wait_ready=False)
 
 
 ''' ------------------------------------------------------------------
-                            MAVLINK Message
+                            MAVLINK MESSAGE
 --------------------------------------------------------------------'''
 # Regular expression pattern
 # Location: (lat)N (lon)W (alt)
@@ -69,13 +69,3 @@ while True:
     # Send command to vehicle
     vehicle.send_mavlink(msg)
     print("Custom Trapis Mavlink sent")
-
-
-''' ------------------------------------------------------------------
-                           CLOSE VEHICLE
---------------------------------------------------------------------'''
-
-#Close vehicle object before exiting script
-print("Close vehicle object")
-vehicle.close()
-print("Completed")
