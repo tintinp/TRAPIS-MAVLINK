@@ -46,26 +46,38 @@ vehicle = connect(connection_string, wait_ready=False)
 # Location: (lat)N (lon)W (alt)
 regex = r"[A-Za-z]+[:]\s([0-9]+[\.][0-9]+)[N]\s([0-9]+[\.][0-9]+)[W]\s([0-9]+[\.][0-9]+)"
 
-while True:
-    # Listen for data from UDP
-    data, addr = serverSocket.recvfrom(1024)
-    messageReceived = data.decode("hex")
-    match = re.search(regex, messageReceived)
-    lat = float(match.group(1))
-    lon = float(match.group(2))
-    alt = float(match.group(3))
+try:
+    while True:
+        # Listen for data from UDP
+        data, addr = serverSocket.recvfrom(1024)
+        messageReceived = data.decode("hex")
+        match = re.search(regex, messageReceived)
+        lat = float(match.group(1))
+        lon = float(match.group(2))
+        alt = float(match.group(3))
 
-    # Packing Mavlink message
-    msg = vehicle.message_factory.command_long_encode(
-    0, 0,    # target system, target component
-    CUSTOM_TRAPIS_ID, #command
-    0, #confirmation
-    lat,
-    lon,
-    alt,
-    0,
-    0, 0, 0)
+        # Packing Mavlink message
+        msg = vehicle.message_factory.command_long_encode(
+        0, 0,    # target system, target component
+        CUSTOM_TRAPIS_ID, #command
+        0, #confirmation
+        lat,
+        lon,
+        alt,
+        0,
+        0, 0, 0)
 
-    # Send command to vehicle
-    vehicle.send_mavlink(msg)
-    print("Custom Trapis Mavlink sent")
+        # Send command to vehicle
+        vehicle.send_mavlink(msg)
+        print("Custom Trapis Mavlink sent")
+except KeyboardInterrupt:
+    pass
+
+''' ------------------------------------------------------------------
+                           CLOSE VEHICLE 
+--------------------------------------------------------------------'''
+
+#Close vehicle object before exiting script
+print("Close vehicle object")
+vehicle.close()
+print("Completed")
